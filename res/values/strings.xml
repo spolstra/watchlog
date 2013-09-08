@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WatchActivity</string>
+    <string name="app_name">WatchLog</string>
+    <string name="input_label">Enter time:</string>
+    <string name="time_hint">13:10:03</string>
 </resources>

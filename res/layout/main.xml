@@ -4,10 +4,22 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="Hello World, WatchActivity"
-    />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/input_label" />
+    <EditText
+        android:id="@+id/time_input"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/time_hint"
+        android:inputType="textNoSuggestions"
+        android:padding="10dip"
+        android:textSize="18sp" />
+    <ListView
+        android:id="@+id/time_list"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1" />
 </LinearLayout>
 
