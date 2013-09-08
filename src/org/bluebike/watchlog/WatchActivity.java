@@ -11,6 +11,11 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.AdapterView;
 import android.view.View;
+import android.widget.TextView;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView.OnEditorActionListener;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,24 +53,24 @@ public class WatchActivity extends Activity
         adapter.add("Max");
 
         // Setup listeners
-        TextWatcher textWatcher = new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start,
-                    int count, int after) {
-                /* Do nothing */
+        timeInput.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                    KeyEvent event) {
+                boolean handled = false;
+                Log.d(TAG, "In onEditorAction");
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    Log.d(TAG, "onEditorAction");
+                    adapter.add(timeInput.getText().toString().trim());
+                    handled = true;
+                    // Close that annoying softkeyboard
+                    InputMethodManager imm = (InputMethodManager)
+                        getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+                return handled;
             }
-            public void onTextChanged(CharSequence s, int start,
-                    int before, int count) {
-                /* Do nothing */
-                Log.d(TAG, "onTextChanged");
-            }
-            public void afterTextChanged(Editable s) {
-                /* Do nothing */
-                Log.d(TAG, "afterTextChanged");
-                // What is an Editable ?
-                adapter.add(timeInput.getText().toString().trim());
-            }
-        };
-        timeInput.addTextChangedListener(textWatcher);
+        });
 
         OnItemClickListener clickListener = new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
