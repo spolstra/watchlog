@@ -16,9 +16,15 @@ import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView.OnEditorActionListener;
 import android.view.inputmethod.InputMethodManager;
+import android.app.DialogFragment;
+import android.text.format.DateFormat;
+import android.app.TimePickerDialog;
+import android.app.Dialog;
+import android.widget.TimePicker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
 
 
 public class WatchActivity extends Activity
@@ -83,4 +89,43 @@ public class WatchActivity extends Activity
         timeList.setOnItemClickListener(clickListener);
 
     }
+
+    public class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                // Use the current time as the default values for the picker
+                final Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
+
+                // Create a new instance of TimePickerDialog and return it
+                return new TimePickerDialog(getActivity(), this,
+                        hour, minute,
+                        DateFormat.is24HourFormat(getActivity()));
+            }
+
+            public void onTimeSet(TimePicker view, int hourOfDay,
+                    int minute) {
+                // Add time to list
+                // Due to a bug described here:
+                // http://stackoverflow.com/questions/11444238/jelly-bean-datepickerdialog-is-there-a-way-to-cancel
+                // and the bug report here:
+                // https://code.google.com/p/android/issues/detail?id=34833
+                // we might get called twice.
+                addToList(hourOfDay + ":" + minute);
+                Log.d(TAG, "TimePicker:" + hourOfDay + ":" + minute);
+        }
+    }
+
+    public void addToList(String time) {
+        adapter.add(time);
+    }
+
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getFragmentManager(), "timePicker");
+    }
+
 }
