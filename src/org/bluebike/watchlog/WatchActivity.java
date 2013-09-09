@@ -31,7 +31,6 @@ public class WatchActivity extends Activity
 {
     private static final String TAG = "WatchActivity";
     private ListView timeList;
-    private EditText timeInput;
     private List<String> items;
     private ArrayAdapter<String> adapter;
 
@@ -43,7 +42,6 @@ public class WatchActivity extends Activity
 
         setContentView(R.layout.main);
 
-        timeInput = (EditText) findViewById(R.id.time_input);
         timeList = (ListView) findViewById(R.id.time_list);
 
         // Setup adapter for timelist
@@ -59,25 +57,6 @@ public class WatchActivity extends Activity
         adapter.add("Max");
 
         // Setup listeners
-        timeInput.setOnEditorActionListener(new OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                    KeyEvent event) {
-                boolean handled = false;
-                Log.d(TAG, "In onEditorAction");
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    Log.d(TAG, "onEditorAction");
-                    adapter.add(timeInput.getText().toString().trim());
-                    handled = true;
-                    // Close that annoying softkeyboard
-                    InputMethodManager imm = (InputMethodManager)
-                        getSystemService(INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-                return handled;
-            }
-        });
-
         OnItemClickListener clickListener = new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {

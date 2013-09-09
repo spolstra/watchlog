@@ -4,24 +4,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/input_label" />
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/pick_time"
         android:onClick="showTimePickerDialog" />
-    <EditText
-        android:id="@+id/time_input"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/time_hint"
-        android:inputType="textNoSuggestions"
-        android:imeOptions="actionDone"
-        android:padding="10dip"
-        android:textSize="18sp" />
     <ListView
         android:id="@+id/time_list"
         android:layout_width="fill_parent"
