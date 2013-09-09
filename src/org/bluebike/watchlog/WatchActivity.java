@@ -93,6 +93,7 @@ public class WatchActivity extends Activity
     public class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
 
+            private boolean first = true;
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 // Use the current time as the default values for the picker
@@ -114,8 +115,12 @@ public class WatchActivity extends Activity
                 // and the bug report here:
                 // https://code.google.com/p/android/issues/detail?id=34833
                 // we might get called twice.
-                addToList(hourOfDay + ":" + minute);
-                Log.d(TAG, "TimePicker:" + hourOfDay + ":" + minute);
+                // Cancel will still call this however.
+                if (first) {
+                    addToList(hourOfDay + ":" + minute);
+                    Log.d(TAG, "TimePicker:" + hourOfDay + ":" + minute);
+                    first = false;
+                }
         }
     }
 
