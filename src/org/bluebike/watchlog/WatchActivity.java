@@ -104,9 +104,9 @@ public class WatchActivity extends Activity
 
                     int sec_diff = (hour - cur_hour)*3600 +
                         (minute - cur_minute)*60 - cur_second;
-                    addToList(hour + ":" + minute
-                            + " [" + cur_hour + ":" + cur_minute +
-                            ":" + cur_second + "] => " + sec_diff);
+                    addToList(" [" + cur_hour + ":" + cur_minute +
+                            ":" + cur_second + "]  " + hour + ":" + minute
+                            +  " => " + sec_diff);
                     Log.d(TAG, "TimePicker:" + hour + ":" + minute);
                     first = false;
                 }
