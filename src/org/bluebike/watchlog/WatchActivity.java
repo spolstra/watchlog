@@ -86,7 +86,7 @@ public class WatchActivity extends Activity
                         DateFormat.is24HourFormat(getActivity()));
             }
 
-            public void onTimeSet(TimePicker view, int hourOfDay,
+            public void onTimeSet(TimePicker view, int hour,
                     int minute) {
                 // Add time to list
                 // Due to a bug described here:
@@ -96,8 +96,18 @@ public class WatchActivity extends Activity
                 // we might get called twice.
                 // Cancel will still call this however.
                 if (first) {
-                    addToList(hourOfDay + ":" + minute);
-                    Log.d(TAG, "TimePicker:" + hourOfDay + ":" + minute);
+                    // Get current time to time step this entry.
+                    final Calendar c = Calendar.getInstance();
+                    int cur_hour = c.get(Calendar.HOUR_OF_DAY);
+                    int cur_minute = c.get(Calendar.MINUTE);
+                    int cur_second = c.get(Calendar.SECOND);
+
+                    int sec_diff = (hour - cur_hour)*3600 +
+                        (minute - cur_minute)*60 - cur_second;
+                    addToList(hour + ":" + minute
+                            + " [" + cur_hour + ":" + cur_minute +
+                            ":" + cur_second + "] => " + sec_diff);
+                    Log.d(TAG, "TimePicker:" + hour + ":" + minute);
                     first = false;
                 }
         }
