@@ -27,6 +27,16 @@ import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.content.ContentValues;
+
+import static android.provider.BaseColumns._ID;
+import static org.bluebike.watchlog.Constants.TABLE_NAME;
+import static org.bluebike.watchlog.Constants.TIME;
+import static org.bluebike.watchlog.Constants.WTIME;
+import static org.bluebike.watchlog.Constants.DIFF;
+import static org.bluebike.watchlog.Constants.RATE;
 
 
 public class WatchActivity extends Activity
@@ -37,6 +47,10 @@ public class WatchActivity extends Activity
     private ArrayAdapter<String> adapter;
     private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
+    private WatchData watchdata;
+    private static String[] FROM = { _ID, TIME, WTIME, DIFF, RATE, };
+    private static String ORDER_BY = TIME + " DESC";
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -44,6 +58,8 @@ public class WatchActivity extends Activity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+        // Get the watch data log
+        watchdata = new WatchData(this);
 
         timeList = (ListView) findViewById(R.id.time_list);
 
@@ -53,11 +69,13 @@ public class WatchActivity extends Activity
                 android.R.layout.simple_list_item_1, items);
         timeList.setAdapter(adapter);
 
-        // Set initial dummy text (ok to do it here?)
-        adapter.clear();
-        adapter.add("Sam");
-        adapter.add("and");
-        adapter.add("Max");
+        // First attempt is just to use the arrayadapter
+        try {
+            Cursor cursor = getData();
+            showData(cursor);
+        } finally {
+            watchdata.close();
+        }
 
         // Setup listeners
         OnItemClickListener clickListener = new OnItemClickListener() {
@@ -71,6 +89,34 @@ public class WatchActivity extends Activity
         timeList.setOnItemClickListener(clickListener);
 
     }
+
+    private Cursor getData() {
+        SQLiteDatabase db = watchdata.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, FROM, null, null, null,
+                null, ORDER_BY);
+        startManagingCursor(cursor);
+        Log.d(TAG, "getData");
+        return cursor;
+    }
+
+    private void showData(Cursor cursor) {
+        // Clear list
+        adapter.clear();
+
+        // Add data from db to List
+        while (cursor.moveToNext()) {
+            // or use getColumnIndexOrThrow()
+            long id = cursor.getLong(0);
+            long time_sec = cursor.getLong(1);
+            long wtime_sec = cursor.getLong(2);
+            long diff = cursor.getLong(3);
+            long rate = cursor.getLong(4);
+            adapter.add("[" + sdf.format(new Date(time_sec*1000)) + "] " +
+                    sdf.format(new Date(wtime_sec*1000)) + " => " + diff);
+            Log.d(TAG, "ShowData:" + id);
+        }
+    }
+
 
     public class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
@@ -92,12 +138,8 @@ public class WatchActivity extends Activity
             public void onTimeSet(TimePicker view, int hour,
                     int minute) {
                 // Add time to list
-                // Due to a bug described here:
                 // http://stackoverflow.com/questions/11444238/jelly-bean-datepickerdialog-is-there-a-way-to-cancel
-                // and the bug report here:
-                // https://code.google.com/p/android/issues/detail?id=34833
-                // we might get called twice.
-                // Cancel will still call this however.
+                // we might get called twice. Cancel might call as well.
                 if (first) {
                     // Get current time.
                     final Calendar c = Calendar.getInstance();
@@ -109,18 +151,27 @@ public class WatchActivity extends Activity
                     c.set(Calendar.SECOND, 0);
                     Date picked = c.getTime();
 
-                    int sec_diff = (int) (picked.getTime() -
-                            now.getTime())/1000;
-                    addToList(" [" + sdf.format(now) + "]  " +
-                            sdf.format(picked) +  " => " + sec_diff);
-                    Log.d(TAG, "TimePicker:" + hour + ":" + minute);
+                    addData(now, picked);
+                    Log.d(TAG, "TimePicker:" + now + " : " + now.getTime());
                     first = false;
                 }
         }
     }
 
-    public void addToList(String time) {
-        adapter.add(time);
+    public void addData(Date timestamp, Date picked) {
+        long timestamp_sec = timestamp.getTime()/1000;
+        long picked_sec = picked.getTime()/1000;
+        int diff_sec = (int) (picked_sec - timestamp_sec);
+
+        SQLiteDatabase db = watchdata.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(TIME, timestamp_sec);
+        values.put(WTIME, picked_sec);
+        values.put(DIFF,  diff_sec);
+        values.put(RATE, 0); // TODO: calculate from prev entry.
+        db.insertOrThrow(TABLE_NAME, null, values);
+        Log.d(TAG, "addData:" + picked_sec);
+        Log.d(TAG, "addData:" + sdf.format(new Date(picked_sec*1000)));
     }
 
     public void showTimePickerDialog(View v) {
