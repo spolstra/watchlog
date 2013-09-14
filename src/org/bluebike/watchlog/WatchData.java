@@ -23,8 +23,8 @@ public class WatchData extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " (" + _ID
-                + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-                + TIME + " INTEGER, " 
+                + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + TIME + " INTEGER, "
                 + WTIME + " INTEGER,"
                 + DIFF + " INTEGER,"
                 + RATE + " INTEGER);");

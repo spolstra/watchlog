@@ -25,6 +25,8 @@ import android.widget.TimePicker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 public class WatchActivity extends Activity
@@ -33,6 +35,7 @@ public class WatchActivity extends Activity
     private ListView timeList;
     private List<String> items;
     private ArrayAdapter<String> adapter;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
     /** Called when the activity is first created. */
     @Override
@@ -96,17 +99,20 @@ public class WatchActivity extends Activity
                 // we might get called twice.
                 // Cancel will still call this however.
                 if (first) {
-                    // Get current time to time step this entry.
+                    // Get current time.
                     final Calendar c = Calendar.getInstance();
-                    int cur_hour = c.get(Calendar.HOUR_OF_DAY);
-                    int cur_minute = c.get(Calendar.MINUTE);
-                    int cur_second = c.get(Calendar.SECOND);
 
-                    int sec_diff = (hour - cur_hour)*3600 +
-                        (minute - cur_minute)*60 - cur_second;
-                    addToList(" [" + cur_hour + ":" + cur_minute +
-                            ":" + cur_second + "]  " + hour + ":" + minute
-                            +  " => " + sec_diff);
+                    Date now = c.getTime();
+                    // Use current time to create picked time.
+                    c.set(Calendar.HOUR_OF_DAY, hour);
+                    c.set(Calendar.MINUTE, minute);
+                    c.set(Calendar.SECOND, 0);
+                    Date picked = c.getTime();
+
+                    int sec_diff = (int) (picked.getTime() -
+                            now.getTime())/1000;
+                    addToList(" [" + sdf.format(now) + "]  " +
+                            sdf.format(picked) +  " => " + sec_diff);
                     Log.d(TAG, "TimePicker:" + hour + ":" + minute);
                     first = false;
                 }
