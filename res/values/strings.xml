@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">WatchLog</string>
     <string name="pick_time">New entry</string>
+    <string name="empty">Empty</string>
 </resources>

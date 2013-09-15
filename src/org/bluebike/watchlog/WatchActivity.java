@@ -1,15 +1,14 @@
 package org.bluebike.watchlog;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.text.TextWatcher;
-import android.widget.AdapterView.OnItemClickListener;
 import android.text.Editable;
 import android.util.Log;
 import android.widget.EditText;
-import android.widget.AdapterView;
 import android.view.View;
 import android.widget.TextView;
 import android.view.KeyEvent;
@@ -22,7 +21,6 @@ import android.app.TimePickerDialog;
 import android.app.Dialog;
 import android.widget.TimePicker;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,17 +37,18 @@ import static org.bluebike.watchlog.Constants.DIFF;
 import static org.bluebike.watchlog.Constants.RATE;
 
 
-public class WatchActivity extends Activity
+public class WatchActivity extends ListActivity
 {
     private static final String TAG = "WatchActivity";
     private ListView timeList;
     private List<String> items;
-    private ArrayAdapter<String> adapter;
     private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
     private WatchData watchdata;
     private static String[] FROM = { _ID, TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
+    private static int[] TO = {R.id.rowid, R.id.time, R.id.wtime, R.id.diff,
+                                R.id.rate, };
 
     /** Called when the activity is first created. */
     @Override
@@ -60,34 +59,15 @@ public class WatchActivity extends Activity
         setContentView(R.layout.main);
         // Get the watch data log
         watchdata = new WatchData(this);
+        // Unused now.
+        timeList = (ListView) findViewById(android.R.id.list);
 
-        timeList = (ListView) findViewById(R.id.time_list);
-
-        // Setup adapter for timelist
-        items = new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, items);
-        timeList.setAdapter(adapter);
-
-        // First attempt is just to use the arrayadapter
         try {
             Cursor cursor = getData();
             showData(cursor);
         } finally {
             watchdata.close();
         }
-
-        // Setup listeners
-        OnItemClickListener clickListener = new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-                String query = (String) parent.getItemAtPosition(position);
-                /* Log this for now */
-                Log.d(TAG, "onItemClick: [" + query +"]");
-            }
-        };
-        timeList.setOnItemClickListener(clickListener);
-
     }
 
     private Cursor getData() {
@@ -100,23 +80,11 @@ public class WatchActivity extends Activity
     }
 
     private void showData(Cursor cursor) {
-        // Clear list
-        adapter.clear();
-
-        // Add data from db to List
-        while (cursor.moveToNext()) {
-            // or use getColumnIndexOrThrow()
-            long id = cursor.getLong(0);
-            long time_sec = cursor.getLong(1);
-            long wtime_sec = cursor.getLong(2);
-            long diff = cursor.getLong(3);
-            long rate = cursor.getLong(4);
-            adapter.add("[" + sdf.format(new Date(time_sec*1000)) + "] " +
-                    sdf.format(new Date(wtime_sec*1000)) + " => " + diff);
-            Log.d(TAG, "ShowData:" + id);
-        }
+        // Data binding
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+                    R.layout.item, cursor, FROM, TO);
+        setListAdapter(adapter);
     }
-
 
     public class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
@@ -137,8 +105,6 @@ public class WatchActivity extends Activity
 
             public void onTimeSet(TimePicker view, int hour,
                     int minute) {
-                // Add time to list
-                // http://stackoverflow.com/questions/11444238/jelly-bean-datepickerdialog-is-there-a-way-to-cancel
                 // we might get called twice. Cancel might call as well.
                 if (first) {
                     // Get current time.
