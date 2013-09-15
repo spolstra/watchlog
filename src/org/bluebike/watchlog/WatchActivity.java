@@ -145,4 +145,8 @@ public class WatchActivity extends ListActivity
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int p, long id) {
+        Log.d(TAG, "onListItemClick, position: " + p + ", id: " + id);
+    }
 }
