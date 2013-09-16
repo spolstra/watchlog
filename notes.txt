@@ -1,0 +1,67 @@
+
+Date now = new Date();
+Long longTime = new Long(now.getTime()/1000);
+
+But then avoid Long and use long instead
+sam:~/projects/java.examples/examples/TestTime.java
+
+
+// Create a date from a long.
+Date n = new Date();
+System.out.println("now + 10 seconds: " + (n.getTime() + 10000)/1000);
+System.out.println("now + 10 seconds: " + new Date(n.getTime()));
+System.out.println("now + 10 seconds: " + new Date(n.getTime() + 10000));
+System.out.println("Formatted: " + DateFormat.getTimeInstance().format(n));
+SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+// This is useful for watchlog
+System.out.println("simple format: " + sdf.format(n));
+
+
+Mon Sep 16 22:42:22 CEST 2013
+There seem to be a lot of ways to manipulate data from the database before it
+displayed in the listview.
+
+1.  Override the CursorAdapter.convertToString method
+
+2. Override the SimpleCursorAdapter.setViewText method:
+    SimpleCursorAdapter shows = new SimpleCursorAdapter(this, R.layout.somelayout, accountCursor, from, to)
+    {
+     @Override
+     public void setViewText(TextView v, String text) {
+     super.setViewText(v, convText(v, text));
+    }    
+    };
+    
+    private String convText(TextView v, String text)
+    {
+    
+     switch (v.getId())
+     {
+     case R.id.date:
+                 String formatedText = text;
+                 //do format
+                return formatedText;
+            }
+    return text;
+    }
+
+
+3. set a new ViewBinder with the SimpleCursorAdapter.setViewBinder method:
+SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.list, cursor,
+            new String[] { Definition.Item.TITLE, Definition.Item.CREATE_DATE }, new int[] { R.id.title, R.id.createDate});
+
+adapter.setViewBinder(new ViewBinder() {
+
+    public boolean setViewValue(View aView, Cursor aCursor, int aColumnIndex) {
+
+        if (aColumnIndex == 2) {
+                String createDate = aCursor.getString(aColumnIndex);
+                TextView textView = (TextView) aView;
+                textView.setText("Create date: " + MyFormatterHelper.formatDate(getApplicationContext(), createDate));
+                return true;
+         }
+
+         return false;
+    }
+});
+

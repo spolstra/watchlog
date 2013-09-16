@@ -81,6 +81,7 @@ public class WatchActivity extends ListActivity
 
     private void showData(Cursor cursor) {
         // Data binding
+        // FIXME: better performance if we use LoaderManager/CursorLoader.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                     R.layout.item, cursor, FROM, TO);
         setListAdapter(adapter);
@@ -136,6 +137,7 @@ public class WatchActivity extends ListActivity
         values.put(DIFF,  diff_sec);
         values.put(RATE, 0); // TODO: calculate from prev entry.
         db.insertOrThrow(TABLE_NAME, null, values);
+        showData(getData());
         Log.d(TAG, "addData:" + picked_sec);
         Log.d(TAG, "addData:" + sdf.format(new Date(picked_sec*1000)));
     }
