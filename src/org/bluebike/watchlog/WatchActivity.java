@@ -83,7 +83,13 @@ public class WatchActivity extends ListActivity
         // Data binding
         // FIXME: better performance if we use LoaderManager/CursorLoader.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                    R.layout.item, cursor, FROM, TO);
+                    R.layout.item, cursor, FROM, TO) {
+                @Override
+                public CharSequence convertToString(Cursor cursor) {
+                    Log.d(TAG, "convertToString called");
+                    return "simon";
+                }
+        };
         setListAdapter(adapter);
     }
 
