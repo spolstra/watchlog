@@ -84,12 +84,21 @@ public class WatchActivity extends ListActivity
         // FIXME: better performance if we use LoaderManager/CursorLoader.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                     R.layout.item, cursor, FROM, TO) {
-                @Override
-                public CharSequence convertToString(Cursor cursor) {
-                    Log.d(TAG, "convertToString called");
-                    return "simon";
-                }
+            @Override
+            public void setViewText(TextView v, String text) {
+                Log.d(TAG, "setViewText" + text);
+                v.setText(text);
+            }
+
         };
+        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Cursor c, int col) {
+                Log.d(TAG, "setViewValue");
+                return false;
+            }
+        });
+
         setListAdapter(adapter);
     }
 
