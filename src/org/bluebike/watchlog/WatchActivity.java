@@ -83,18 +83,20 @@ public class WatchActivity extends ListActivity
         // Data binding
         // FIXME: better performance if we use LoaderManager/CursorLoader.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                    R.layout.item, cursor, FROM, TO) {
-            @Override
-            public void setViewText(TextView v, String text) {
-                Log.d(TAG, "setViewText" + text);
-                v.setText(text);
-            }
+                    R.layout.item, cursor, FROM, TO);
 
-        };
+        // Format time and watch time columns to HH:MM:SS
         adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Cursor c, int col) {
-                Log.d(TAG, "setViewValue");
+                if (col == 1 || col == 2) {
+                    Log.d(TAG, "setViewValue");
+                    TextView v = (TextView) view;
+                    long time = c.getLong(col);
+                    // * 1000 because we need millisecs
+                    v.setText(sdf.format(time * 1000));
+                    return true;
+                }
                 return false;
             }
         });

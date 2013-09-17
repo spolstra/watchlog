@@ -12,7 +12,7 @@
         android:id="@+id/rowidcolon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=": "
+        android:text=": ["
         android:layout_toRightOf="@id/rowid" />
     <TextView
         android:id="@+id/time"
@@ -20,16 +20,16 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/rowidcolon" />
     <TextView
-        android:id="@+id/timecolon"
+        android:id="@+id/timesep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=": "
+        android:text="] "
         android:layout_toRightOf="@id/time" />
     <TextView
         android:id="@+id/wtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/timecolon" />
+        android:layout_toRightOf="@id/timesep" />
     <TextView
         android:id="@+id/wtimecolon"
         android:layout_width="wrap_content"
