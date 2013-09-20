@@ -12,6 +12,10 @@ import android.widget.EditText;
 import android.view.View;
 import android.widget.TextView;
 import android.view.KeyEvent;
+import android.view.ActionMode;
+import android.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView.OnEditorActionListener;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +24,7 @@ import android.text.format.DateFormat;
 import android.app.TimePickerDialog;
 import android.app.Dialog;
 import android.widget.TimePicker;
+import android.widget.AbsListView.MultiChoiceModeListener;
 
 import java.util.List;
 import java.util.Calendar;
@@ -59,8 +64,44 @@ public class WatchActivity extends ListActivity
         setContentView(R.layout.main);
         // Get the watch data log
         watchdata = new WatchData(this);
-        // Unused now.
         timeList = (ListView) findViewById(android.R.id.list);
+        timeList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        timeList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode,
+                        int position, long id, boolean checked) {
+                Log.d(TAG, "onItemCheckedStateChanged");
+            }
+            @Override
+            public boolean onActionItemClicked(ActionMode mode,
+                                               MenuItem item) {
+                // respond to clicks on the actions in the CAB
+                switch(item.getItemId()) {
+                    case R.id.menu_delete:
+                        //deleteSelectedItems();
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu){
+                // Inflate the menu for the CAB
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.context, menu);
+                return true;
+            }
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                // actions when the CAB is removed.
+            }
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu){
+                // updates to the CAB due to an invalidate() request.
+                return true;
+            }
+        });
 
         try {
             Cursor cursor = getData();
