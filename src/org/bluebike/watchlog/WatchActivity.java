@@ -111,10 +111,12 @@ public class WatchActivity extends ListActivity
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 // actions when the CAB is removed.
+                selected.clear(); // clear selected items
             }
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu){
                 // updates to the CAB due to an invalidate() request.
+                selected.clear(); // clear selected items
                 return true;
             }
         });
@@ -128,21 +130,11 @@ public class WatchActivity extends ListActivity
     }
 
     private void deleteSelectedItems() {
-        // Convert set to array of strings.
-        List <String> deleteArrayList = new ArrayList<String>();
+        SQLiteDatabase db = watchdata.getWritableDatabase();
         for (Long e : selected) {
             Log.d(TAG, "deleting: " + e.toString());
-            deleteArrayList.add(e.toString());
+            db.delete(TABLE_NAME, _ID + " ='" + e + "'",null);
         }
-        String[] deleteArgs = new String[deleteArrayList.size()];
-        deleteArrayList.toArray(deleteArgs);
-        Log.d(TAG, "array: " + Arrays.toString(deleteArgs));
-
-        SQLiteDatabase db = watchdata.getWritableDatabase();
-        // Define 'where' part of query.
-        String selection = _ID + " LIKE ?";
-        // Issue SQL statement.
-        db.delete(TABLE_NAME, selection, deleteArgs);
         showData(getData());
     }
 
