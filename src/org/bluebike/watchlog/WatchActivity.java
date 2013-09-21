@@ -29,6 +29,10 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -54,6 +58,8 @@ public class WatchActivity extends ListActivity
     private static String ORDER_BY = TIME + " DESC";
     private static int[] TO = {R.id.rowid, R.id.time, R.id.wtime, R.id.diff,
                                 R.id.rate, };
+    // Store selected items in a set:
+    private static Set<Long> selected = new TreeSet<Long>();
 
     /** Called when the activity is first created. */
     @Override
@@ -70,7 +76,14 @@ public class WatchActivity extends ListActivity
             @Override
             public void onItemCheckedStateChanged(ActionMode mode,
                         int position, long id, boolean checked) {
-                Log.d(TAG, "onItemCheckedStateChanged");
+                Log.d(TAG, "onItemCheckedStateChanged, pos:" + position
+                    + " id: " + id + " checked: " + checked);
+                if (checked) {
+                    selected.add(id);
+                } else {
+                    selected.remove(id);
+                }
+
             }
             @Override
             public boolean onActionItemClicked(ActionMode mode,
@@ -78,7 +91,10 @@ public class WatchActivity extends ListActivity
                 // respond to clicks on the actions in the CAB
                 switch(item.getItemId()) {
                     case R.id.menu_delete:
-                        //deleteSelectedItems();
+                        deleteSelectedItems();
+                        Log.d(TAG, "delete button pressed");
+                        Log.d(TAG, "selected items: " + selected);
+                        selected.clear(); // clear selected items
                         mode.finish();
                         return true;
                     default:
@@ -111,6 +127,25 @@ public class WatchActivity extends ListActivity
         }
     }
 
+    private void deleteSelectedItems() {
+        // Convert set to array of strings.
+        List <String> deleteArrayList = new ArrayList<String>();
+        for (Long e : selected) {
+            Log.d(TAG, "deleting: " + e.toString());
+            deleteArrayList.add(e.toString());
+        }
+        String[] deleteArgs = new String[deleteArrayList.size()];
+        deleteArrayList.toArray(deleteArgs);
+        Log.d(TAG, "array: " + Arrays.toString(deleteArgs));
+
+        SQLiteDatabase db = watchdata.getWritableDatabase();
+        // Define 'where' part of query.
+        String selection = _ID + " LIKE ?";
+        // Issue SQL statement.
+        db.delete(TABLE_NAME, selection, deleteArgs);
+        showData(getData());
+    }
+
     private Cursor getData() {
         SQLiteDatabase db = watchdata.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, FROM, null, null, null,
@@ -131,7 +166,7 @@ public class WatchActivity extends ListActivity
             @Override
             public boolean setViewValue(View view, Cursor c, int col) {
                 if (col == 1 || col == 2) {
-                    Log.d(TAG, "setViewValue");
+                    //Log.d(TAG, "setViewValue");
                     TextView v = (TextView) view;
                     long time = c.getLong(col);
                     // * 1000 because we need millisecs
