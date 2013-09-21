@@ -111,11 +111,13 @@ public class WatchActivity extends ListActivity
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 // actions when the CAB is removed.
+                Log.d(TAG, "onDestroyActionMode");
                 selected.clear(); // clear selected items
             }
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu){
                 // updates to the CAB due to an invalidate() request.
+                Log.d(TAG, "onPrepareActionMode");
                 selected.clear(); // clear selected items
                 return true;
             }
