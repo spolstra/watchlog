@@ -131,6 +131,26 @@ public class WatchActivity extends ListActivity
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.new_entry:
+                showTimePickerDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void deleteSelectedItems() {
         SQLiteDatabase db = watchdata.getWritableDatabase();
         for (Long e : selected) {
@@ -229,7 +249,7 @@ public class WatchActivity extends ListActivity
         Log.d(TAG, "addData:" + sdf.format(new Date(picked_sec*1000)));
     }
 
-    public void showTimePickerDialog(View v) {
+    public void showTimePickerDialog() {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
     }
