@@ -51,7 +51,7 @@ public class WatchActivity extends ListActivity
     private static final String TAG = "WatchActivity";
     private ListView timeList;
     private List<String> items;
-    private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
     private WatchData watchdata;
     private static String[] FROM = { _ID, TIME, WTIME, DIFF, RATE, };
@@ -180,11 +180,11 @@ public class WatchActivity extends ListActivity
             @Override
             public boolean setViewValue(View view, Cursor c, int col) {
                 if (col == 1 || col == 2) {
-                    //Log.d(TAG, "setViewValue");
                     TextView v = (TextView) view;
                     long time = c.getLong(col);
                     // * 1000 because we need millisecs
                     v.setText(sdf.format(time * 1000));
+                    Log.d(TAG, "setViewValue" + sdf.format(time * 1000));
                     return true;
                 }
                 return false;
