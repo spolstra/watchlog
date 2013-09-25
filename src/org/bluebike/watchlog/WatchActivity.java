@@ -1,6 +1,6 @@
 package org.bluebike.watchlog;
 
-import android.app.Activity;
+import android.app.LoaderManager;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -47,7 +47,7 @@ import static org.bluebike.watchlog.Constants.RATE;
 
 
 public class WatchActivity extends ListActivity
-{
+            implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "WatchActivity";
     private ListView timeList;
     private List<String> items;
@@ -70,6 +70,8 @@ public class WatchActivity extends ListActivity
         setContentView(R.layout.main);
         // Get the watch data log
         watchdata = new WatchData(this);
+
+        // Set up multichoice listener on the list
         timeList = (ListView) findViewById(android.R.id.list);
         timeList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         timeList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
@@ -83,7 +85,6 @@ public class WatchActivity extends ListActivity
                 } else {
                     selected.remove(id);
                 }
-
             }
             @Override
             public boolean onActionItemClicked(ActionMode mode,
@@ -123,13 +124,15 @@ public class WatchActivity extends ListActivity
             }
         });
 
-        try {
-            Cursor cursor = getData();
-            showData(cursor);
-        } finally {
-            watchdata.close();
-        }
+        // Set up loader and adapter.
+        // First create an empty adapter.
+        adapter = new SimpleCursorAdapter(this, R.layout.item, null, FROM, TO, 0);
+        setListAdapter(adapter);
+        // replace ListFragment.setListShown with Activity.setVisible?
+        // Prepare the loader.
+        getLoaderManager().initLoader(0, null, this);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
