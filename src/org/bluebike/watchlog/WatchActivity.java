@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
 
 import static android.provider.BaseColumns._ID;
@@ -44,6 +43,7 @@ import static org.bluebike.watchlog.Constants.TIME;
 import static org.bluebike.watchlog.Constants.WTIME;
 import static org.bluebike.watchlog.Constants.DIFF;
 import static org.bluebike.watchlog.Constants.RATE;
+import static org.bluebike.watchlog.Constants.CONTENT_URI;
 
 
 public class WatchActivity extends ListActivity
@@ -53,7 +53,6 @@ public class WatchActivity extends ListActivity
     private List<String> items;
     private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
-    private WatchData watchdata;
     private static String[] FROM = { _ID, TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
     private static int[] TO = {R.id.rowid, R.id.time, R.id.wtime, R.id.diff,
@@ -68,8 +67,6 @@ public class WatchActivity extends ListActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
-        // Get the watch data log
-        watchdata = new WatchData(this);
         timeList = (ListView) findViewById(android.R.id.list);
         timeList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         timeList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
@@ -123,12 +120,10 @@ public class WatchActivity extends ListActivity
             }
         });
 
-        try {
-            Cursor cursor = getData();
-            showData(cursor);
-        } finally {
-            watchdata.close();
-        }
+        // Get cursor from our content provider.
+        Cursor cursor = getData();
+        // And show it
+        showData(cursor);
     }
 
     @Override
@@ -152,21 +147,19 @@ public class WatchActivity extends ListActivity
     }
 
     private void deleteSelectedItems() {
+        /* TODO: update delete for content provider.
         SQLiteDatabase db = watchdata.getWritableDatabase();
         for (Long e : selected) {
             Log.d(TAG, "deleting: " + e.toString());
             db.delete(TABLE_NAME, _ID + " ='" + e + "'",null);
         }
         showData(getData());
+        */
     }
 
     private Cursor getData() {
-        SQLiteDatabase db = watchdata.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, FROM, null, null, null,
-                null, ORDER_BY);
-        startManagingCursor(cursor);
         Log.d(TAG, "getData");
-        return cursor;
+        return managedQuery(CONTENT_URI, FROM, null, null, ORDER_BY);
     }
 
     private void showData(Cursor cursor) {
@@ -237,14 +230,15 @@ public class WatchActivity extends ListActivity
         long picked_sec = picked.getTime()/1000;
         int diff_sec = (int) (picked_sec - timestamp_sec);
 
-        SQLiteDatabase db = watchdata.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TIME, timestamp_sec);
         values.put(WTIME, picked_sec);
         values.put(DIFF,  diff_sec);
         values.put(RATE, 0); // TODO: calculate from prev entry.
-        db.insertOrThrow(TABLE_NAME, null, values);
-        showData(getData());
+        getContentResolver().insert(CONTENT_URI, values);
+
+        // TODO: need to call show again?
+        //showData(getData());
         Log.d(TAG, "addData:" + picked_sec);
         Log.d(TAG, "addData:" + sdf.format(new Date(picked_sec*1000)));
     }
