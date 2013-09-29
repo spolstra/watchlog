@@ -9,4 +9,4 @@ public interface Constants extends BaseColumns {
     public static final String WTIME = "watchtime";
     public static final String DIFF = "difference";
     public static final String RATE = "rate";
-} 
+}

@@ -133,6 +133,20 @@ public class WatchActivity extends ListActivity
         getLoaderManager().initLoader(0, null, this);
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Called when a new loader needs to be created.
+/*    private Cursor getData() {
+        SQLiteDatabase db = watchdata.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, FROM, null, null, null,
+                null, ORDER_BY);
+        startManagingCursor(cursor);
+        Log.d(TAG, "getData");
+        return cursor;
+    }
+
+*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,15 +175,6 @@ public class WatchActivity extends ListActivity
             db.delete(TABLE_NAME, _ID + " ='" + e + "'",null);
         }
         showData(getData());
-    }
-
-    private Cursor getData() {
-        SQLiteDatabase db = watchdata.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, FROM, null, null, null,
-                null, ORDER_BY);
-        startManagingCursor(cursor);
-        Log.d(TAG, "getData");
-        return cursor;
     }
 
     private void showData(Cursor cursor) {
