@@ -237,8 +237,6 @@ public class WatchActivity extends ListActivity
         values.put(RATE, 0); // TODO: calculate from prev entry.
         getContentResolver().insert(CONTENT_URI, values);
 
-        // TODO: need to call show again?
-        //showData(getData());
         Log.d(TAG, "addData:" + picked_sec);
         Log.d(TAG, "addData:" + sdf.format(new Date(picked_sec*1000)));
     }

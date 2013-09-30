@@ -33,8 +33,8 @@ public class WatchLogProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY, "entries", ENTRIES);
-        uriMatcher.addURI(AUTHORITY, "entry/#", ENTRY_ID);
+        uriMatcher.addURI(AUTHORITY, "watchdata", ENTRIES);
+        uriMatcher.addURI(AUTHORITY, "watchdata/#", ENTRY_ID);
         watchData = new WatchData(getContext());
         return true;
     }
