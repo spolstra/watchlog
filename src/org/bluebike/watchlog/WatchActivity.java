@@ -1,24 +1,16 @@
 package org.bluebike.watchlog;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.text.TextWatcher;
-import android.text.Editable;
 import android.util.Log;
-import android.widget.EditText;
 import android.view.View;
 import android.widget.TextView;
-import android.view.KeyEvent;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView.OnEditorActionListener;
-import android.view.inputmethod.InputMethodManager;
 import android.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.app.TimePickerDialog;
@@ -80,7 +72,6 @@ public class WatchActivity extends ListActivity
                 } else {
                     selected.remove(id);
                 }
-
             }
             @Override
             public boolean onActionItemClicked(ActionMode mode,
