@@ -147,14 +147,11 @@ public class WatchActivity extends ListActivity
     }
 
     private void deleteSelectedItems() {
-        /* TODO: update delete for content provider.
-        SQLiteDatabase db = watchdata.getWritableDatabase();
         for (Long e : selected) {
             Log.d(TAG, "deleting: " + e.toString());
-            db.delete(TABLE_NAME, _ID + " ='" + e + "'",null);
+            getContentResolver().delete(CONTENT_URI,
+                    _ID + " ='" + e + "'",null);
         }
-        showData(getData());
-        */
     }
 
     private Cursor getData() {
@@ -183,7 +180,6 @@ public class WatchActivity extends ListActivity
                 return false;
             }
         });
-
         setListAdapter(adapter);
     }
 
