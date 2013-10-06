@@ -38,18 +38,15 @@ import static org.bluebike.watchlog.Constants.RATE;
 import static org.bluebike.watchlog.Constants.CONTENT_URI;
 
 
-public class WatchActivity extends ListActivity
+public class SelectActivity extends ListActivity
 {
-    private static final String TAG = "WatchActivity";
-    private ListView timeList;
-    private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
+    private static final String TAG = "SelectActivity";
+    private ListView logList;
 
     private static String[] FROM = { _ID, TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
     private static int[] TO = {R.id.rowid, R.id.time, R.id.wtime, R.id.diff,
                                 R.id.rate, };
-    // Store selected items in a set:
-    private static Set<Long> selected = new TreeSet<Long>();
 
     /** Called when the activity is first created. */
     @Override
@@ -57,63 +54,14 @@ public class WatchActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
-        timeList = (ListView) findViewById(android.R.id.list);
-        timeList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        timeList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode,
-                        int position, long id, boolean checked) {
-                Log.d(TAG, "onItemCheckedStateChanged, pos:" + position
-                    + " id: " + id + " checked: " + checked);
-                if (checked) {
-                    selected.add(id);
-                } else {
-                    selected.remove(id);
-                }
-            }
-            @Override
-            public boolean onActionItemClicked(ActionMode mode,
-                                               MenuItem item) {
-                // respond to clicks on the actions in the CAB
-                switch(item.getItemId()) {
-                    case R.id.menu_delete:
-                        deleteSelectedItems();
-                        Log.d(TAG, "delete button pressed");
-                        Log.d(TAG, "selected items: " + selected);
-                        selected.clear(); // clear selected items
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu){
-                // Inflate the menu for the CAB
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.context, menu);
-                return true;
-            }
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                // actions when the CAB is removed.
-                Log.d(TAG, "onDestroyActionMode");
-                selected.clear(); // clear selected items
-            }
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu){
-                // updates to the CAB due to an invalidate() request.
-                Log.d(TAG, "onPrepareActionMode");
-                selected.clear(); // clear selected items
-                return true;
-            }
-        });
+        // try default layout first.
+        //setContentView(R.layout.select);
+        logList = (ListView) findViewById(android.R.id.list);
 
         // Get cursor from our content provider.
-        Cursor cursor = getData();
+        //Cursor cursor = getData();
         // And show it
-        showData(cursor);
+        //showData(cursor);
     }
 
     @Override
