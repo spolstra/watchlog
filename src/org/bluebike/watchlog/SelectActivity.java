@@ -68,7 +68,7 @@ public class SelectActivity extends ListActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_activity_actions, menu);
+        inflater.inflate(R.menu.select_activity_actions, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -77,18 +77,10 @@ public class SelectActivity extends ListActivity
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.new_entry:
-                showTimePickerDialog();
+                Log.d(TAG, "User pressed new button");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void deleteSelectedItems() {
-        for (Long e : selected) {
-            Log.d(TAG, "deleting: " + e.toString());
-            getContentResolver().delete(CONTENT_URI,
-                    _ID + " ='" + e + "'",null);
         }
     }
 
@@ -99,85 +91,23 @@ public class SelectActivity extends ListActivity
 
     private void showData(Cursor cursor) {
         // Data binding
-        // FIXME: better performance if we use LoaderManager/CursorLoader.
+        // TODO need dummy binding here.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                     R.layout.item, cursor, FROM, TO);
 
-        // Format time and watch time columns to HH:MM:SS
-        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor c, int col) {
-                if (col == 1 || col == 2) {
-                    TextView v = (TextView) view;
-                    long time = c.getLong(col);
-                    // * 1000 because we need millisecs
-                    v.setText(sdf.format(time * 1000));
-                    Log.d(TAG, "setViewValue" + sdf.format(time * 1000));
-                    return true;
-                }
-                return false;
-            }
-        });
         setListAdapter(adapter);
     }
 
-    public class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
-
-            private boolean first = true;
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                // Use the current time as the default values for the picker
-                final Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-
-                // Create a new instance of TimePickerDialog and return it
-                return new TimePickerDialog(getActivity(), this,
-                        hour, minute,
-                        DateFormat.is24HourFormat(getActivity()));
-            }
-
-            public void onTimeSet(TimePicker view, int hour,
-                    int minute) {
-                // we might get called twice. Cancel might call as well.
-                if (first) {
-                    // Get current time.
-                    final Calendar c = Calendar.getInstance();
-
-                    Date now = c.getTime();
-                    // Use current time to create picked time.
-                    c.set(Calendar.HOUR_OF_DAY, hour);
-                    c.set(Calendar.MINUTE, minute);
-                    c.set(Calendar.SECOND, 0);
-                    Date picked = c.getTime();
-
-                    addData(now, picked);
-                    Log.d(TAG, "TimePicker:" + now + " : " + now.getTime());
-                    first = false;
-                }
-        }
-    }
-
     public void addData(Date timestamp, Date picked) {
-        long timestamp_sec = timestamp.getTime()/1000;
-        long picked_sec = picked.getTime()/1000;
-        int diff_sec = (int) (picked_sec - timestamp_sec);
-
+        /*
         ContentValues values = new ContentValues();
         values.put(TIME, timestamp_sec);
         values.put(WTIME, picked_sec);
         values.put(DIFF,  diff_sec);
         values.put(RATE, 0); // TODO: calculate from prev entry.
         getContentResolver().insert(CONTENT_URI, values);
-
-        Log.d(TAG, "addData:" + picked_sec);
-        Log.d(TAG, "addData:" + sdf.format(new Date(picked_sec*1000)));
-    }
-
-    public void showTimePickerDialog() {
-        DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getFragmentManager(), "timePicker");
+    */
+        Log.d(TAG, "addData");
     }
 
     @Override
