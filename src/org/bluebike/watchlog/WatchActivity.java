@@ -31,6 +31,7 @@ import android.content.ContentValues;
 
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
+import static org.bluebike.watchlog.Constants.LOGNAME;
 import static org.bluebike.watchlog.Constants.TIME;
 import static org.bluebike.watchlog.Constants.WTIME;
 import static org.bluebike.watchlog.Constants.DIFF;
@@ -44,10 +45,10 @@ public class WatchActivity extends ListActivity
     private ListView timeList;
     private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
-    private static String[] FROM = { _ID, TIME, WTIME, DIFF, RATE, };
+    private static String[] FROM = { _ID, LOGNAME, TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
-    private static int[] TO = {R.id.rowid, R.id.time, R.id.wtime, R.id.diff,
-                                R.id.rate, };
+    private static int[] TO = {R.id.rowid, R.id.logname, R.id.time,
+        R.id.wtime, R.id.diff, R.id.rate, };
     // Store selected items in a set:
     private static Set<Long> selected = new TreeSet<Long>();
 
@@ -159,7 +160,7 @@ public class WatchActivity extends ListActivity
         adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Cursor c, int col) {
-                if (col == 1 || col == 2) {
+                if (col == 2 || col == 3) {
                     TextView v = (TextView) view;
                     long time = c.getLong(col);
                     // * 1000 because we need millisecs
@@ -217,6 +218,7 @@ public class WatchActivity extends ListActivity
         int diff_sec = (int) (picked_sec - timestamp_sec);
 
         ContentValues values = new ContentValues();
+        values.put(LOGNAME, "testlog");
         values.put(TIME, timestamp_sec);
         values.put(WTIME, picked_sec);
         values.put(DIFF,  diff_sec);

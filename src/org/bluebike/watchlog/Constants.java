@@ -6,6 +6,7 @@ import android.net.Uri;
 public interface Constants extends BaseColumns {
     public static final String TABLE_NAME = "watchdata";
     // Columns in Watchlog database
+    public static final String LOGNAME = "name";
     public static final String TIME = "timestamp";
     public static final String WTIME = "watchtime";
     public static final String DIFF = "difference";

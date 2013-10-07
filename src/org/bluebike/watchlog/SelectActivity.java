@@ -59,7 +59,7 @@ public class SelectActivity extends ListActivity
         logList = (ListView) findViewById(android.R.id.list);
 
         // Get cursor from our content provider.
-        //Cursor cursor = getData();
+        Cursor cursor = getData();
         // And show it
         //showData(cursor);
     }

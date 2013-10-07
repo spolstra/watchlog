@@ -2,6 +2,7 @@ package org.bluebike.watchlog;
 
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
+import static org.bluebike.watchlog.Constants.LOGNAME;
 import static org.bluebike.watchlog.Constants.TIME;
 import static org.bluebike.watchlog.Constants.WTIME;
 import static org.bluebike.watchlog.Constants.DIFF;
@@ -13,7 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class WatchData extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "watchdata.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     /* Create helper object */
     public WatchData(Context ctx) {
@@ -24,6 +25,7 @@ public class WatchData extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " (" + _ID
                 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + LOGNAME + " STRING, "
                 + TIME + " LONG, "
                 + WTIME + " LONG,"
                 + DIFF + " INTEGER,"
@@ -33,7 +35,7 @@ public class WatchData extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion,
             int newVersion) {
-        db.execSQL("DROP TABLE IF EXITS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
 }
