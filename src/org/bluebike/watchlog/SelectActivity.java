@@ -32,6 +32,7 @@ import android.content.ContentValues;
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
 import static org.bluebike.watchlog.Constants.LOGNAME;
+import static org.bluebike.watchlog.Constants.TIME;
 import static org.bluebike.watchlog.Constants.CONTENT_LOG_URI;
 
 
@@ -39,11 +40,14 @@ public class SelectActivity extends ListActivity
 {
     private static final String TAG = "SelectActivity";
     private ListView logList;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
-    private static String[] FROM = { _ID, LOGNAME };
+    private static String[] FROM = { _ID, LOGNAME, TIME };
     // TODO: What order would make sense here?
-    private static String ORDER_BY = LOGNAME + " DESC";
-    private static int[] TO = {R.id.rid, R.id.logname };
+    private static String ORDER_BY = TIME + " ASC";
+    // TODO: Currently misusing using rowid so we dont show _ID.
+    // Must be a better way right?
+    private static int[] TO = { R.id.rowid, R.id.logname, R.id.time };
 
     /** Called when the activity is first created. */
     @Override
@@ -90,6 +94,21 @@ public class SelectActivity extends ListActivity
         // Data binding
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                     R.layout.select_item, cursor, FROM, TO);
+        // Format time and watch time columns to HH:MM:SS
+        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Cursor c, int col) {
+                if (col == 2) {
+                    TextView v = (TextView) view;
+                    long time = c.getLong(col);
+                    // * 1000 because we need millisecs
+                    v.setText(sdf.format(time * 1000));
+                    Log.d(TAG, "setViewValue" + sdf.format(time * 1000));
+                    return true;
+                }
+                return false;
+            }
+        });
 
         setListAdapter(adapter);
     }
