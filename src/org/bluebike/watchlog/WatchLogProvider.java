@@ -18,6 +18,7 @@ import android.text.TextUtils;
 public class WatchLogProvider extends ContentProvider {
     private static final int ENTRIES = 1;
     private static final int ENTRY_ID = 2;
+    private static final int LOG_ENTRIES = 3;
 
     // mime type of a directory of watch log entries
     private static final String CONTENT_TYPE
@@ -27,6 +28,10 @@ public class WatchLogProvider extends ContentProvider {
     private static final String CONTENT_ITEM_TYPE
         = "vnd.android.cursor.item/vnd.bluebike.watchdata";
 
+    // mime type of a directory of watch log entries
+    private static final String CONTENT_LOG_TYPE
+        = "vnd.android.cursor.dir/vnd.bluebike.watchlogs";
+
     private WatchData watchData;
     private UriMatcher uriMatcher;
 
@@ -35,6 +40,7 @@ public class WatchLogProvider extends ContentProvider {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, "watchdata", ENTRIES);
         uriMatcher.addURI(AUTHORITY, "watchdata/#", ENTRY_ID);
+        uriMatcher.addURI(AUTHORITY, "watchlogs", LOG_ENTRIES);
         watchData = new WatchData(getContext());
         return true;
     }
@@ -42,15 +48,21 @@ public class WatchLogProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection,
             String selection, String[] selectionArgs, String orderBy) {
+        String groupBy;
         if (uriMatcher.match(uri) == ENTRY_ID) {
             long id = Long.parseLong(uri.getPathSegments().get(1));
             selection = appendRowId(selection, id);
+        }
+        if (uriMatcher.match(uri) == LOG_ENTRIES) {
+            groupBy = "group by name";
+        } else
+            groupBy = null;
         }
 
         // Get database and run query
         SQLiteDatabase db = watchData.getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, projection, selection,
-                selectionArgs, null, null, orderBy);
+                selectionArgs, groupBy,  null, orderBy);
         // Tell the cursor what uri to watch, so it knows when its
         // source data changes
         cursor.setNotificationUri(getContext().getContentResolver(),
@@ -65,6 +77,8 @@ public class WatchLogProvider extends ContentProvider {
                 return CONTENT_TYPE;
             case ENTRY_ID:
                 return CONTENT_ITEM_TYPE;
+            case LOG_ENTRIES:
+                return CONTENT_LOG_TYPE;
             default:
                 throw new IllegalArgumentException("Unknow URI: " + uri);
         }
@@ -119,6 +133,7 @@ public class WatchLogProvider extends ContentProvider {
         int count;
         switch(uriMatcher.match(uri)) {
             case ENTRIES:
+                // TODO: updating all entries makes no sense right?
                 count = db.update(TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
@@ -128,6 +143,7 @@ public class WatchLogProvider extends ContentProvider {
                             selection, id), selectionArgs);
                 break;
             default:
+                // LOG_ENTRIES cannot be updated, will end up here.
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         // Notify any watchers of the change

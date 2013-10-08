@@ -31,11 +31,8 @@ import android.content.ContentValues;
 
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
-import static org.bluebike.watchlog.Constants.TIME;
-import static org.bluebike.watchlog.Constants.WTIME;
-import static org.bluebike.watchlog.Constants.DIFF;
-import static org.bluebike.watchlog.Constants.RATE;
-import static org.bluebike.watchlog.Constants.CONTENT_URI;
+import static org.bluebike.watchlog.Constants.LOGNAME;
+import static org.bluebike.watchlog.Constants.CONTENT_LOG_URI;
 
 
 public class SelectActivity extends ListActivity
@@ -43,10 +40,10 @@ public class SelectActivity extends ListActivity
     private static final String TAG = "SelectActivity";
     private ListView logList;
 
-    private static String[] FROM = { _ID, TIME, WTIME, DIFF, RATE, };
-    private static String ORDER_BY = TIME + " DESC";
-    private static int[] TO = {R.id.rowid, R.id.time, R.id.wtime, R.id.diff,
-                                R.id.rate, };
+    private static String[] FROM = { NAMELOG };
+    // TODO: What order would make sense here?
+    private static String ORDER_BY = NAMELOG + " DESC";
+    private static int[] TO = {R.id.logname };
 
     /** Called when the activity is first created. */
     @Override
@@ -54,14 +51,14 @@ public class SelectActivity extends ListActivity
     {
         super.onCreate(savedInstanceState);
 
-        // try default layout first.
-        //setContentView(R.layout.select);
+        // Could try default layout first.
+        setContentView(R.layout.select);
         logList = (ListView) findViewById(android.R.id.list);
 
         // Get cursor from our content provider.
         Cursor cursor = getData();
         // And show it
-        //showData(cursor);
+        showData(cursor);
     }
 
     @Override
@@ -86,19 +83,19 @@ public class SelectActivity extends ListActivity
 
     private Cursor getData() {
         Log.d(TAG, "getData");
-        return managedQuery(CONTENT_URI, FROM, null, null, ORDER_BY);
+        return managedQuery(CONTENT_LOG_URI, FROM, null, null, ORDER_BY);
     }
 
     private void showData(Cursor cursor) {
         // Data binding
-        // TODO need dummy binding here.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                    R.layout.item, cursor, FROM, TO);
+                    R.layout.select_item, cursor, FROM, TO);
 
         setListAdapter(adapter);
     }
 
     public void addData(Date timestamp, Date picked) {
+        // Cannot add data from selector.
         /*
         ContentValues values = new ContentValues();
         values.put(TIME, timestamp_sec);

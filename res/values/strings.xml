@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WatchLog</string>
+    <string name="log_view">Log View</string>
     <string name="pick_time">New entry</string>
     <string name="empty">Empty</string>
 </resources>

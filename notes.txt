@@ -91,4 +91,5 @@ setCursorToStringConverter()
 
 Simpler: CursorAdapter has the method convertToString() that I can override.
 
-
+sql query to fill the select table:
+select name from watchdata group by name;

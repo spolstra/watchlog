@@ -14,4 +14,6 @@ public interface Constants extends BaseColumns {
     public static final String AUTHORITY = "org.bluebike.watchlog";
     public static final Uri CONTENT_URI = Uri.parse("content://" +
             AUTHORITY + "/" + TABLE_NAME);
+    public static final Uri CONTENT_LOG_URI = Uri.parse("content://" +
+            AUTHORITY + "/" + "watchlogs");
 }
