@@ -40,10 +40,10 @@ public class SelectActivity extends ListActivity
     private static final String TAG = "SelectActivity";
     private ListView logList;
 
-    private static String[] FROM = { NAMELOG };
+    private static String[] FROM = { _ID, LOGNAME };
     // TODO: What order would make sense here?
-    private static String ORDER_BY = NAMELOG + " DESC";
-    private static int[] TO = {R.id.logname };
+    private static String ORDER_BY = LOGNAME + " DESC";
+    private static int[] TO = {R.id.rid, R.id.logname };
 
     /** Called when the activity is first created. */
     @Override

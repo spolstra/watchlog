@@ -54,8 +54,8 @@ public class WatchLogProvider extends ContentProvider {
             selection = appendRowId(selection, id);
         }
         if (uriMatcher.match(uri) == LOG_ENTRIES) {
-            groupBy = "group by name";
-        } else
+            groupBy = "name";
+        } else {
             groupBy = null;
         }
 
