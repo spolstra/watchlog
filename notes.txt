@@ -93,3 +93,8 @@ Simpler: CursorAdapter has the method convertToString() that I can override.
 
 sql query to fill the select table:
 select name from watchdata group by name;
+
+speedup?
+I/Choreographer( 1985): Skipped 221 frames!  The application may be
+doing too much work on its main thread.
+

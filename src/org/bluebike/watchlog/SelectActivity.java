@@ -28,12 +28,15 @@ import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import android.database.Cursor;
 import android.content.ContentValues;
+import android.content.Intent;
 
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
 import static org.bluebike.watchlog.Constants.LOGNAME;
 import static org.bluebike.watchlog.Constants.TIME;
 import static org.bluebike.watchlog.Constants.CONTENT_LOG_URI;
+
+import static org.bluebike.watchlog.Constants.WATCHLOG_LOGNAME;
 
 
 public class SelectActivity extends ListActivity
@@ -78,6 +81,7 @@ public class SelectActivity extends ListActivity
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.new_entry:
+                // TODO: start fragment to ask for new log name.
                 Log.d(TAG, "User pressed new button");
                 return true;
             default:
@@ -115,19 +119,19 @@ public class SelectActivity extends ListActivity
 
     public void addData(Date timestamp, Date picked) {
         // Cannot add data from selector.
-        /*
-        ContentValues values = new ContentValues();
-        values.put(TIME, timestamp_sec);
-        values.put(WTIME, picked_sec);
-        values.put(DIFF,  diff_sec);
-        values.put(RATE, 0); // TODO: calculate from prev entry.
-        getContentResolver().insert(CONTENT_URI, values);
-    */
         Log.d(TAG, "addData");
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int p, long id) {
-        Log.d(TAG, "onListItemClick, position: " + p + ", id: " + id);
+        // TODO: start WatchLog activity for this log.
+        // Extract log name.
+        String logname =
+            ((TextView) v.findViewById(R.id.logname)).getText().toString();
+        Log.d(TAG, "onListItemClick, position: " + p + ", id: " + id
+                 + "text: " + logname);
+        Intent intent = new Intent(this, WatchActivity.class);
+        intent.putExtra(WATCHLOG_LOGNAME, logname);
+        startActivity(intent);
     }
 }

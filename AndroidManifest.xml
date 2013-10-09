@@ -15,7 +15,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".WatchActivity"
-                  android:label="@string/log_view">
+            android:label="@string/log_view"
+            android:parentActivityName=".SelectActivity">
         </activity>
     </application>
 </manifest>

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.text.SimpleDateFormat;
 import android.database.Cursor;
 import android.content.ContentValues;
+import android.content.Intent;
 
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
@@ -38,10 +39,13 @@ import static org.bluebike.watchlog.Constants.DIFF;
 import static org.bluebike.watchlog.Constants.RATE;
 import static org.bluebike.watchlog.Constants.CONTENT_URI;
 
+import static org.bluebike.watchlog.Constants.WATCHLOG_LOGNAME;
+
 
 public class WatchActivity extends ListActivity
 {
     private static final String TAG = "WatchActivity";
+    private static String logname;
     private ListView timeList;
     private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
@@ -57,6 +61,9 @@ public class WatchActivity extends ListActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        logname = intent.getStringExtra(WATCHLOG_LOGNAME);
 
         setContentView(R.layout.main);
         timeList = (ListView) findViewById(android.R.id.list);
@@ -218,7 +225,7 @@ public class WatchActivity extends ListActivity
         int diff_sec = (int) (picked_sec - timestamp_sec);
 
         ContentValues values = new ContentValues();
-        values.put(LOGNAME, "testlog");
+        values.put(LOGNAME, logname);
         values.put(TIME, timestamp_sec);
         values.put(WTIME, picked_sec);
         values.put(DIFF,  diff_sec);
