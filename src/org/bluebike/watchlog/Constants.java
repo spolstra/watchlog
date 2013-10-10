@@ -17,4 +17,5 @@ public interface Constants extends BaseColumns {
     public static final Uri CONTENT_LOG_URI = Uri.parse("content://" +
             AUTHORITY + "/" + "watchlogs");
     public static final String WATCHLOG_LOGNAME = "logname";
+    public static final String TAG = "WatchLog";
 }

@@ -1,6 +1,8 @@
 package org.bluebike.watchlog;
 
 import android.app.ListActivity;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -11,6 +13,7 @@ import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.LayoutInflater;
 import android.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.app.TimePickerDialog;
@@ -29,6 +32,7 @@ import java.text.SimpleDateFormat;
 import android.database.Cursor;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.DialogInterface;
 
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
