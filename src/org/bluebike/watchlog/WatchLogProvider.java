@@ -4,6 +4,7 @@ import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.AUTHORITY;
 import static org.bluebike.watchlog.Constants.CONTENT_URI;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
+import static org.bluebike.watchlog.Constants.LOGNAME;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -57,6 +58,10 @@ public class WatchLogProvider extends ContentProvider {
             groupBy = "name";
         } else {
             groupBy = null;
+        }
+        // Filter entries which have logname
+        if (uriMatcher.match(uri) == ENTRIES) {
+            selection = LOGNAME + "= '" + selection + "'";
         }
 
         // Get database and run query

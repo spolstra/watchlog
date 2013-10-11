@@ -154,7 +154,7 @@ public class WatchActivity extends ListActivity
 
     private Cursor getData() {
         Log.d(TAG, "getData");
-        return managedQuery(CONTENT_URI, FROM, null, null, ORDER_BY);
+        return managedQuery(CONTENT_URI, FROM, logname, null, ORDER_BY);
     }
 
     private void showData(Cursor cursor) {
