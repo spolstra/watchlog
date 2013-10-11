@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import android.database.Cursor;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.app.ActionBar;
 
 import static android.provider.BaseColumns._ID;
 import static org.bluebike.watchlog.Constants.TABLE_NAME;
@@ -53,9 +54,9 @@ public class WatchActivity extends ListActivity
         new SimpleDateFormat("HH:mm:ss");
 
     private static String[] FROM = { _ID, LOGNAME, TIME, WTIME, DIFF, RATE, };
-    private static String[] FROM2 = { LOGNAME, TIME, WTIME, DIFF, RATE, };
+    private static String[] FROM2 = { TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
-    private static int[] TO = {R.id.logname, R.id.ntime,
+    private static int[] TO = {R.id.ntime,
         R.id.wtime, R.id.diff, R.id.rate, };
     // Store selected items in a set:
     private static Set<Long> selected = new TreeSet<Long>();
@@ -68,6 +69,9 @@ public class WatchActivity extends ListActivity
 
         Intent intent = getIntent();
         logname = intent.getStringExtra(WATCHLOG_LOGNAME);
+
+        final ActionBar bar = getActionBar();
+        bar.setTitle(logname);
 
         setContentView(R.layout.main);
         timeList = (ListView) findViewById(android.R.id.list);
