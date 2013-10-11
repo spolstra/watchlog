@@ -55,7 +55,7 @@ public class WatchActivity extends ListActivity
     private static String[] FROM = { _ID, LOGNAME, TIME, WTIME, DIFF, RATE, };
     private static String[] FROM2 = { LOGNAME, TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
-    private static int[] TO = {R.id.logname, R.id.time,
+    private static int[] TO = {R.id.logname, R.id.ntime,
         R.id.wtime, R.id.diff, R.id.rate, };
     // Store selected items in a set:
     private static Set<Long> selected = new TreeSet<Long>();

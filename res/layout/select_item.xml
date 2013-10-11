@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="[" />
     <TextView
-        android:id="@id/time"
+        android:id="@+id/stime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/lbrace" />
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="] "
-        android:layout_toRightOf="@id/time" />
+        android:layout_toRightOf="@id/stime" />
     <TextView
         android:id="@+id/logname"
         android:layout_width="wrap_content"

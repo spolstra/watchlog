@@ -50,12 +50,12 @@ public class SelectActivity extends ListActivity implements
     private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
     private static String[] FROM = { _ID, LOGNAME, TIME };
-    private static String[] FROM2 = { LOGNAME, TIME };
+    private static String[] FROM2 = { TIME, LOGNAME };
     // TODO: What order would make sense here?
     private static String ORDER_BY = TIME + " ASC";
     // TODO: Currently misusing using rowid so we dont show _ID.
     // Must be a better way right?
-    private static int[] TO = { R.id.logname, R.id.time };
+    private static int[] TO = { R.id.stime, R.id.logname };
 
     /** Called when the activity is first created. */
     @Override

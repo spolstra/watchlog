@@ -5,15 +5,9 @@
     android:orientation="horizontal"
     android:padding="10sp">
     <TextView
-        android:id="@+id/rowidcolon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=": "/>
-    <TextView
         android:id="@+id/logname"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/rowidcolon" />
+        android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/lognamesep"
         android:layout_width="wrap_content"
@@ -21,7 +15,7 @@
         android:text=" ["
         android:layout_toRightOf="@id/logname" />
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/ntime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/lognamesep" />
@@ -30,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="] "
-        android:layout_toRightOf="@id/time" />
+        android:layout_toRightOf="@id/ntime" />
     <TextView
         android:id="@+id/wtime"
         android:layout_width="wrap_content"
