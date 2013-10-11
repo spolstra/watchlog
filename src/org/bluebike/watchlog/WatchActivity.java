@@ -53,8 +53,9 @@ public class WatchActivity extends ListActivity
         new SimpleDateFormat("HH:mm:ss");
 
     private static String[] FROM = { _ID, LOGNAME, TIME, WTIME, DIFF, RATE, };
+    private static String[] FROM2 = { LOGNAME, TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
-    private static int[] TO = {R.id.rowid, R.id.logname, R.id.time,
+    private static int[] TO = {R.id.logname, R.id.time,
         R.id.wtime, R.id.diff, R.id.rate, };
     // Store selected items in a set:
     private static Set<Long> selected = new TreeSet<Long>();
@@ -164,7 +165,7 @@ public class WatchActivity extends ListActivity
         // Data binding
         // FIXME: better performance if we use LoaderManager/CursorLoader.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                    R.layout.item, cursor, FROM, TO);
+                    R.layout.item, cursor, FROM2, TO);
 
         // Format time and watch time columns to HH:MM:SS
         adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {

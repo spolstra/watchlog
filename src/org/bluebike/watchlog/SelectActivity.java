@@ -50,11 +50,12 @@ public class SelectActivity extends ListActivity implements
     private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
     private static String[] FROM = { _ID, LOGNAME, TIME };
+    private static String[] FROM2 = { LOGNAME, TIME };
     // TODO: What order would make sense here?
     private static String ORDER_BY = TIME + " ASC";
     // TODO: Currently misusing using rowid so we dont show _ID.
     // Must be a better way right?
-    private static int[] TO = { R.id.rowid, R.id.logname, R.id.time };
+    private static int[] TO = { R.id.logname, R.id.time };
 
     /** Called when the activity is first created. */
     @Override
@@ -113,7 +114,7 @@ public class SelectActivity extends ListActivity implements
     private void showData(Cursor cursor) {
         // Data binding
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                    R.layout.select_item, cursor, FROM, TO);
+                    R.layout.select_item, cursor, FROM2, TO);
         // Format time and watch time columns to HH:MM:SS
         adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             @Override
