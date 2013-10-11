@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">WatchLog</string>
     <string name="log_view">Log View</string>
-    <string name="pick_time">New entry</string>
     <string name="empty">Empty</string>
     <string name="logname">LogName</string>
     <string name="create">Create</string>

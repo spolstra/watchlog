@@ -47,6 +47,7 @@ public class GetNameFragment extends DialogFragment {
 
     // Use this instance of the interface to deliver action events
     OnNameSetListener listener;
+    View v;
 
     // Override the Fragment.onAttach() method to instantiate
     // the OnNameSetListener
@@ -78,19 +79,24 @@ public class GetNameFragment extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the
         // dialog layout
-        builder.setView(inflater.inflate(R.layout.getname, null))
+        v = inflater.inflate(R.layout.getname, null);
+        builder.setView(v)
             // Add action buttons
             .setPositiveButton(R.string.create,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            Log.d(TAG, "positive!");
+                            View tv = v.findViewById(R.id.logname);
+                            String name = ((TextView) tv).getText().toString();
+                            Log.d(TAG, "positive: " + name);
+                            listener.onNameSet(name);
                         }
                     })
         .setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        GetNameFragment.this.getDialog().cancel();
+                        // GetNameFragment.this.getDialog().cancel();
+                        Log.d(TAG, "cancel!");
                     }
                 });
         return builder.create();

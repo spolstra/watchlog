@@ -41,11 +41,11 @@ import static org.bluebike.watchlog.Constants.TIME;
 import static org.bluebike.watchlog.Constants.CONTENT_LOG_URI;
 
 import static org.bluebike.watchlog.Constants.WATCHLOG_LOGNAME;
+import static org.bluebike.watchlog.Constants.TAG;
 
-
-public class SelectActivity extends ListActivity
+public class SelectActivity extends ListActivity implements
+                                    GetNameFragment.OnNameSetListener
 {
-    private static final String TAG = "SelectActivity";
     private ListView logList;
     private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
 
@@ -72,6 +72,15 @@ public class SelectActivity extends ListActivity
         showData(cursor);
     }
 
+    /* Implement OnNameSetListener. */
+    @Override
+    public void onNameSet(String name) {
+        Log.d(TAG, "onNameSet called with name: " + name);
+        Intent intent = new Intent(this, WatchActivity.class);
+        intent.putExtra(WATCHLOG_LOGNAME, name);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -87,6 +96,9 @@ public class SelectActivity extends ListActivity
             case R.id.new_entry:
                 // TODO: start fragment to ask for new log name.
                 Log.d(TAG, "User pressed new button");
+                DialogFragment newFrag= new GetNameFragment();
+                newFrag.show(getFragmentManager(), "getNameFragment");
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
