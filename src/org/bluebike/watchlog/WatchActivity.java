@@ -47,7 +47,10 @@ public class WatchActivity extends ListActivity
     private static final String TAG = "WatchActivity";
     private static String logname;
     private ListView timeList;
-    private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
+    private static SimpleDateFormat timestamp =
+        new SimpleDateFormat("d/L HH:mm:ss");
+    private static SimpleDateFormat watchtime =
+        new SimpleDateFormat("HH:mm:ss");
 
     private static String[] FROM = { _ID, LOGNAME, TIME, WTIME, DIFF, RATE, };
     private static String ORDER_BY = TIME + " DESC";
@@ -167,12 +170,19 @@ public class WatchActivity extends ListActivity
         adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Cursor c, int col) {
-                if (col == 2 || col == 3) {
+                if (col == 2) {
                     TextView v = (TextView) view;
                     long time = c.getLong(col);
                     // * 1000 because we need millisecs
-                    v.setText(sdf.format(time * 1000));
-                    Log.d(TAG, "setViewValue" + sdf.format(time * 1000));
+                    v.setText(timestamp.format(time * 1000));
+                    Log.d(TAG, "setViewValue" + timestamp.format(time * 1000));
+                    return true;
+                } else if (col == 3) {
+                    TextView v = (TextView) view;
+                    long time = c.getLong(col);
+                    // * 1000 because we need millisecs
+                    v.setText(watchtime.format(time * 1000));
+                    Log.d(TAG, "setViewValue" + watchtime.format(time * 1000));
                     return true;
                 }
                 return false;
@@ -233,7 +243,7 @@ public class WatchActivity extends ListActivity
         getContentResolver().insert(CONTENT_URI, values);
 
         Log.d(TAG, "addData:" + picked_sec);
-        Log.d(TAG, "addData:" + sdf.format(new Date(picked_sec*1000)));
+        Log.d(TAG, "addData:" + watchtime.format(new Date(picked_sec*1000)));
     }
 
     public void showTimePickerDialog() {
