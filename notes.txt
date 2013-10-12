@@ -98,3 +98,6 @@ speedup?
 I/Choreographer( 1985): Skipped 221 frames!  The application may be
 doing too much work on its main thread.
 
+Get last entry:
+select * from watchdata where name="testlog" ORDER BY timestamp LIMIT
+1;

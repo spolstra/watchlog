@@ -55,7 +55,7 @@ public class WatchActivity extends ListActivity
 
     private static String[] FROM = { _ID, LOGNAME, TIME, WTIME, DIFF, RATE, };
     private static String[] FROM2 = { TIME, WTIME, DIFF, RATE, };
-    private static String ORDER_BY = TIME + " DESC";
+    private static String ORDER_BY = TIME + " ASC";
     private static int[] TO = {R.id.ntime,
         R.id.wtime, R.id.diff, R.id.rate, };
     // Store selected items in a set:
@@ -219,6 +219,18 @@ public class WatchActivity extends ListActivity
                 if (first) {
                     // Get current time.
                     final Calendar c = Calendar.getInstance();
+
+                    // Try to find the previous entry.
+                    Cursor last = managedQuery(
+                            CONTENT_URI, FROM, logname, null, TIME + " DESC");
+                    if (last.moveToFirst()) {
+                        // We are not the fist entry, calculate rate.
+                        Long lasttime =
+                            last.getLong(last.getColumnIndex(TIME));
+                        Long lastwtime =
+                            last.getLong(last.getColumnIndex(WTIME));
+                        Log.d(TAG, "last entry: " + watchtime.format(new Date(lasttime*1000)));
+                    }
 
                     Date now = c.getTime();
                     // Use current time to create picked time.
