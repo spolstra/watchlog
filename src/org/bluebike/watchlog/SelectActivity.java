@@ -47,7 +47,7 @@ public class SelectActivity extends ListActivity implements
                                     GetNameFragment.OnNameSetListener
 {
     private ListView logList;
-    private static SimpleDateFormat sdf = new SimpleDateFormat("d/L HH:mm:ss");
+    private static SimpleDateFormat sdf = new SimpleDateFormat("d/L");
 
     private static String[] FROM = { _ID, LOGNAME, TIME };
     private static String[] FROM2 = { TIME, LOGNAME };
