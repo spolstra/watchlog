@@ -215,6 +215,8 @@ public class WatchActivity extends ListActivity
 
             public void onTimeSet(TimePicker view, int hour,
                     int minute) {
+                long lasttime = 0;
+                long lastwtime = 0;
                 // we might get called twice. Cancel might call as well.
                 if (first) {
                     // Get current time.
@@ -222,15 +224,16 @@ public class WatchActivity extends ListActivity
 
                     // Try to find the previous entry.
                     Cursor last = managedQuery(
-                            CONTENT_URI, FROM, logname, null, TIME + " DESC");
+                          CONTENT_URI, FROM, logname, null, TIME + " DESC");
                     if (last.moveToFirst()) {
                         // We are not the fist entry, calculate rate.
-                        Long lasttime =
+                        lasttime =
                             last.getLong(last.getColumnIndex(TIME));
-                        Long lastwtime =
+                        lastwtime =
                             last.getLong(last.getColumnIndex(WTIME));
                         Log.d(TAG, "last entry: " + watchtime.format(new Date(lasttime*1000)));
-                    }
+
+                    } 
 
                     Date now = c.getTime();
                     // Use current time to create picked time.
@@ -239,24 +242,34 @@ public class WatchActivity extends ListActivity
                     c.set(Calendar.SECOND, 0);
                     Date picked = c.getTime();
 
-                    addData(now, picked);
+                    addData(now, picked, lasttime, lastwtime);
                     Log.d(TAG, "TimePicker:" + now + " : " + now.getTime());
                     first = false;
                 }
         }
     }
 
-    public void addData(Date timestamp, Date picked) {
+    public void addData(Date timestamp, Date picked, long lasttime,
+            long lastwtime) {
+        long rate;
         long timestamp_sec = timestamp.getTime()/1000;
         long picked_sec = picked.getTime()/1000;
         int diff_sec = (int) (picked_sec - timestamp_sec);
+
+        // Calculate rate if there are previous entries.
+        if (lasttime != 0) {
+            rate = (diff_sec - (lastwtime - lasttime)) *
+                ((60*60*24)/(timestamp_sec - lasttime));
+        } else {
+            rate = 0;
+        }
 
         ContentValues values = new ContentValues();
         values.put(LOGNAME, logname);
         values.put(TIME, timestamp_sec);
         values.put(WTIME, picked_sec);
         values.put(DIFF,  diff_sec);
-        values.put(RATE, 0); // TODO: calculate from prev entry.
+        values.put(RATE, rate);
         getContentResolver().insert(CONTENT_URI, values);
 
         Log.d(TAG, "addData:" + picked_sec);
