@@ -258,8 +258,8 @@ public class WatchActivity extends ListActivity
 
         // Calculate rate if there are previous entries.
         if (lasttime != 0) {
-            rate = (diff_sec - (lastwtime - lasttime)) *
-                ((60*60*24)/(timestamp_sec - lasttime));
+            rate = (long)((diff_sec - (lastwtime - lasttime)) *
+                ((float)(60*60*24)/(timestamp_sec - lasttime)));
         } else {
             rate = 0;
         }
